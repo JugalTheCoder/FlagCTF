@@ -1,0 +1,329 @@
+import React, { useMemo, useState } from "react";
+import { motion } from "framer-motion";
+import { Shield, Flag, Terminal, Trophy, Lock, Search, CheckCircle2, Target, ChevronRight, User, LogIn } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+
+const modules = [
+  {
+    id: 1,
+    title: "Web Exploitation",
+    category: "Web",
+    difficulty: "Beginner",
+    progress: 60,
+    xp: 150,
+    lessons: 8,
+    icon: Search,
+    topics: ["HTTP", "XSS", "SQL Injection", "Burp Suite"],
+  },
+  {
+    id: 2,
+    title: "Linux Privilege Escalation",
+    category: "System",
+    difficulty: "Intermediate",
+    progress: 30,
+    xp: 220,
+    lessons: 10,
+    icon: Terminal,
+    topics: ["SUID", "sudo", "cron jobs", "misconfigs"],
+  },
+  {
+    id: 3,
+    title: "Cryptography",
+    category: "Crypto",
+    difficulty: "Intermediate",
+    progress: 40,
+    xp: 180,
+    lessons: 7,
+    icon: Lock,
+    topics: ["Caesar", "RSA", "hashes", "encoding"],
+  },
+  {
+    id: 4,
+    title: "Binary Exploitation",
+    category: "Pwn",
+    difficulty: "Advanced",
+    progress: 10,
+    xp: 320,
+    lessons: 12,
+    icon: Target,
+    topics: ["Buffer overflow", "GDB", "Stack", "Memory"],
+  },
+];
+
+const challenges = [
+  { name: "Hidden Flag", type: "Forensics", difficulty: "Easy", solved: true, points: 50 },
+  { name: "Cookie Hijack", type: "Web", difficulty: "Medium", solved: false, points: 100 },
+  { name: "Weak RSA", type: "Crypto", difficulty: "Medium", solved: false, points: 120 },
+  { name: "Overflow 101", type: "Pwn", difficulty: "Hard", solved: false, points: 180 },
+];
+
+const leaderboard = [
+  { name: "Jugal", xp: 1240, rank: 1 },
+  { name: "Maya", xp: 1180, rank: 2 },
+  { name: "Noah", xp: 1090, rank: 3 },
+  { name: "Ava", xp: 980, rank: 4 },
+];
+
+function DifficultyBadge({ level }) {
+  const styles = {
+    Beginner: "bg-green-500/10 text-green-300 border-green-500/20",
+    Intermediate: "bg-yellow-500/10 text-yellow-300 border-yellow-500/20",
+    Advanced: "bg-red-500/10 text-red-300 border-red-500/20",
+    Easy: "bg-green-500/10 text-green-300 border-green-500/20",
+    Medium: "bg-yellow-500/10 text-yellow-300 border-yellow-500/20",
+    Hard: "bg-red-500/10 text-red-300 border-red-500/20",
+  };
+
+  return <Badge className={`border ${styles[level]}`}>{level}</Badge>;
+}
+
+export default function FlagLabPlatform() {
+  const [query, setQuery] = useState("");
+
+  const filteredModules = useMemo(() => {
+    return modules.filter((module) =>
+      module.title.toLowerCase().includes(query.toLowerCase())
+    );
+  }, [query]);
+
+  const completedChallenges = challenges.filter((c) => c.solved).length;
+
+  return (
+    <div className="min-h-screen bg-black text-white">
+
+      {/* NAVBAR */}
+      <div className="border-b border-gray-800 bg-black/80 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+
+          <div className="flex items-center gap-3">
+            <img src="/flaglab-logo.png" className="h-10" />
+            <span className="text-xl font-bold text-red-400">FlagLab</span>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <Button variant="outline" className="border-gray-700">
+              <LogIn className="mr-2 h-4 w-4" /> Login
+            </Button>
+            <Button className="bg-red-500 hover:bg-red-400">
+              <User className="mr-2 h-4 w-4" /> Sign Up
+            </Button>
+          </div>
+        </div>
+      </div>
+
+
+      {/* HERO */}
+      <div className="mx-auto max-w-7xl px-6 py-14">
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+
+          <h1 className="text-5xl font-bold text-red-400">
+            FlagLab Cybersecurity Training
+          </h1>
+
+          <p className="mt-4 max-w-2xl text-gray-400">
+            Learn ethical hacking through guided Capture-The-Flag challenges.
+            Practice web exploitation, cryptography, privilege escalation, and
+            binary exploitation in a structured learning environment.
+          </p>
+
+          <div className="mt-6 flex gap-4">
+            <Button className="bg-red-500 hover:bg-red-400">
+              Start Training <ChevronRight className="ml-2 h-4 w-4" />
+            </Button>
+            <Button variant="outline" className="border-gray-700">
+              Explore Challenges
+            </Button>
+          </div>
+
+        </motion.div>
+
+
+        {/* STATS */}
+        <div className="mt-12 grid gap-6 md:grid-cols-3">
+
+          <Card className="bg-gray-900 border-gray-800">
+            <CardContent className="p-6">
+              <Trophy className="mb-2 text-yellow-400" />
+              <div className="text-2xl font-bold">1240 XP</div>
+              <div className="text-gray-400">Total Training XP</div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gray-900 border-gray-800">
+            <CardContent className="p-6">
+              <Flag className="mb-2 text-green-400" />
+              <div className="text-2xl font-bold">{completedChallenges}</div>
+              <div className="text-gray-400">Challenges Solved</div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gray-900 border-gray-800">
+            <CardContent className="p-6">
+              <Shield className="mb-2 text-blue-400" />
+              <div className="text-2xl font-bold">4 Tracks</div>
+              <div className="text-gray-400">Security Domains</div>
+            </CardContent>
+          </Card>
+
+        </div>
+
+
+        {/* SEARCH */}
+        <div className="mt-14">
+
+          <div className="relative max-w-md">
+            <Search className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
+            <Input
+              placeholder="Search modules..."
+              className="pl-9 bg-gray-900 border-gray-700"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+          </div>
+
+
+          {/* MODULES */}
+          <div className="mt-8 grid gap-6 md:grid-cols-2">
+
+            {filteredModules.map((module) => {
+              const Icon = module.icon;
+
+              return (
+                <Card key={module.id} className="bg-gray-900 border-gray-800">
+
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="flex items-center gap-2">
+                        <Icon className="text-red-400" />
+                        {module.title}
+                      </CardTitle>
+                      <DifficultyBadge level={module.difficulty} />
+                    </div>
+
+                    <CardDescription>
+                      {module.lessons} lessons • {module.xp} XP
+                    </CardDescription>
+
+                  </CardHeader>
+
+                  <CardContent>
+
+                    <div className="mb-2 flex justify-between text-sm text-gray-400">
+                      <span>Progress</span>
+                      <span>{module.progress}%</span>
+                    </div>
+
+                    <Progress value={module.progress} />
+
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {module.topics.map((topic) => (
+                        <Badge key={topic} className="bg-black border-gray-700">
+                          {topic}
+                        </Badge>
+                      ))}
+                    </div>
+
+                    <Button className="mt-4 w-full bg-red-500 hover:bg-red-400">
+                      Continue
+                    </Button>
+
+                  </CardContent>
+                </Card>
+              );
+            })}
+
+          </div>
+
+        </div>
+
+
+        {/* CHALLENGES */}
+        <div className="mt-16">
+
+          <h2 className="mb-6 text-2xl font-semibold">CTF Challenge Lab</h2>
+
+          <div className="space-y-4">
+
+            {challenges.map((c) => (
+
+              <div
+                key={c.name}
+                className="flex items-center justify-between rounded-xl border border-gray-800 bg-gray-900 p-4"
+              >
+
+                <div>
+                  <div className="font-medium">{c.name}</div>
+                  <div className="text-sm text-gray-400">
+                    {c.type} • {c.points} pts
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+
+                  {c.solved ? (
+                    <div className="flex items-center gap-1 text-green-400">
+                      <CheckCircle2 className="h-4 w-4" /> solved
+                    </div>
+                  ) : (
+                    <div className="text-gray-400">unsolved</div>
+                  )}
+
+                  <Button variant="outline" className="border-gray-700">
+                    Open
+                  </Button>
+
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
+
+
+        {/* LEADERBOARD */}
+        <div className="mt-16">
+
+          <h2 className="mb-6 text-2xl font-semibold">Leaderboard</h2>
+
+          <div className="space-y-4">
+
+            {leaderboard.map((entry) => (
+
+              <div
+                key={entry.rank}
+                className="flex items-center justify-between rounded-xl border border-gray-800 bg-gray-900 p-4"
+              >
+
+                <div className="font-medium">
+                  #{entry.rank} {entry.name}
+                </div>
+
+                <div className="text-red-400 font-semibold">
+                  {entry.xp} XP
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+    </div>
+  );
+}
